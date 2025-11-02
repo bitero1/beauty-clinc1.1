@@ -1,0 +1,1537 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nootan - کلینیک تخصصی زیبایی</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        :root {
+            --gold: #D4AF37;
+            --dark: #1a1a1a;
+            --light-dark: #2d2d2d;
+            --white: #ffffff;
+            --light-gray: #f5f5f5;
+            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background: var(--dark);
+            color: var(--white);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        /* Improved Loading Screen */
+        .loading-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: var(--dark);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+            transition: opacity 0.5s ease-out, visibility 0.5s ease-out;
+        }
+
+        .loading-screen.hidden {
+            opacity: 0;
+            visibility: hidden;
+        }
+
+        .loading-logo {
+            font-size: clamp(2.5rem, 8vw, 4rem);
+            font-weight: bold;
+            color: var(--gold);
+            margin-bottom: 1rem;
+            animation: pulse 2s infinite;
+        }
+
+        .loading-text {
+            font-size: clamp(1rem, 4vw, 1.5rem);
+            color: var(--white);
+            margin-bottom: 0.5rem;
+            text-align: center;
+            padding: 0 1rem;
+        }
+
+        .loading-subtext {
+            font-size: clamp(0.8rem, 3vw, 1rem);
+            color: var(--gold);
+            opacity: 0.8;
+            text-align: center;
+            padding: 0 1rem;
+        }
+
+        .spinner {
+            width: 40px;
+            height: 40px;
+            border: 3px solid rgba(212, 175, 55, 0.3);
+            border-top: 3px solid var(--gold);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin-top: 2rem;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); opacity: 1; }
+            50% { transform: scale(1.05); opacity: 0.8; }
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Header Styles */
+        header {
+            background: linear-gradient(135deg, var(--dark) 0%, var(--light-dark) 100%);
+            padding: 1rem 2rem;
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(212, 175, 55, 0.1);
+        }
+
+        .nav-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .logo {
+            font-size: clamp(1.5rem, 4vw, 2rem);
+            font-weight: bold;
+            color: var(--gold);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .logo::before {
+            content: "✦";
+            font-size: 1.5rem;
+        }
+
+        /* Mobile Menu */
+        .mobile-menu-btn {
+            display: none;
+            background: none;
+            border: none;
+            color: var(--white);
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+            list-style: none;
+        }
+
+        .nav-links a {
+            color: var(--white);
+            text-decoration: none;
+            font-weight: 500;
+            transition: var(--transition);
+            position: relative;
+        }
+
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            right: 0;
+            width: 0;
+            height: 2px;
+            background: var(--gold);
+            transition: var(--transition);
+        }
+
+        .nav-links a:hover::after {
+            width: 100%;
+        }
+
+        .auth-buttons {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+        }
+
+        .consultation-btn {
+            background: transparent;
+            color: var(--gold);
+            padding: 0.5rem 1rem;
+            border: 2px solid var(--gold);
+            border-radius: 25px;
+            text-decoration: none;
+            transition: var(--transition);
+            font-weight: 600;
+            font-size: clamp(0.8rem, 2vw, 1rem);
+        }
+
+        .consultation-btn:hover {
+            background: var(--gold);
+            color: var(--dark);
+        }
+
+        .cta-button {
+            background: linear-gradient(135deg, var(--gold), #e6c158);
+            color: var(--dark);
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 50px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+            text-decoration: none;
+            display: inline-block;
+            font-size: clamp(0.8rem, 2vw, 1rem);
+        }
+
+        .cta-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(212, 175, 55, 0.3);
+        }
+
+        /* User Profile Styles */
+        .user-profile {
+            position: relative;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            cursor: pointer;
+            padding: 0.5rem;
+            border-radius: 25px;
+            transition: var(--transition);
+        }
+
+        .user-profile:hover {
+            background: rgba(212, 175, 55, 0.1);
+        }
+
+        .user-avatar {
+            width: 35px;
+            height: 35px;
+            background: linear-gradient(135deg, var(--gold), #e6c158);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            color: var(--dark);
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            font-size: 0.9rem;
+        }
+
+        .user-name {
+            color: var(--white);
+            font-weight: 500;
+            font-size: 0.8rem;
+        }
+
+        .notification-badge {
+            position: absolute;
+            top: 0;
+            left: 0;
+            background: #ff4757;
+            color: white;
+            border-radius: 50%;
+            width: 16px;
+            height: 16px;
+            font-size: 0.6rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            animation: pulse 2s infinite;
+        }
+
+        .profile-dropdown {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            width: 280px;
+            background: linear-gradient(135deg, var(--dark) 0%, var(--light-dark) 100%);
+            border: 1px solid rgba(212, 175, 55, 0.3);
+            border-radius: 15px;
+            padding: 1rem;
+            margin-top: 0.5rem;
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(-10px);
+            transition: all 0.3s ease;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+            z-index: 1000;
+        }
+
+        .profile-dropdown.active {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+        }
+
+        .profile-header {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid rgba(212, 175, 55, 0.2);
+            margin-bottom: 1rem;
+        }
+
+        .profile-avatar {
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, var(--gold), #e6c158);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            color: var(--dark);
+            font-size: 1.5rem;
+        }
+
+        .profile-info h4 {
+            color: var(--white);
+            margin-bottom: 0.25rem;
+        }
+
+        .profile-info p {
+            color: var(--light-gray);
+            font-size: 0.8rem;
+        }
+
+        .profile-stats {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .stat-item {
+            text-align: center;
+            padding: 0.75rem;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 10px;
+            border: 1px solid rgba(212, 175, 55, 0.1);
+        }
+
+        .stat-number {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: var(--gold);
+            display: block;
+        }
+
+        .stat-label {
+            font-size: 0.7rem;
+            color: var(--light-gray);
+            margin-top: 0.25rem;
+        }
+
+        .progress-section {
+            margin-bottom: 1.5rem;
+        }
+
+        .progress-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 0.5rem;
+        }
+
+        .progress-title {
+            color: var(--white);
+            font-size: 0.9rem;
+            font-weight: 600;
+        }
+
+        .progress-percent {
+            color: var(--gold);
+            font-size: 0.8rem;
+            font-weight: bold;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 6px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 3px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--gold), #e6c158);
+            border-radius: 3px;
+            width: 65%;
+        }
+
+        .current-treatment {
+            background: rgba(212, 175, 55, 0.1);
+            padding: 1rem;
+            border-radius: 10px;
+            border: 1px solid rgba(212, 175, 55, 0.2);
+            margin-bottom: 1rem;
+        }
+
+        .treatment-title {
+            color: var(--gold);
+            font-size: 0.9rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
+        .treatment-details {
+            color: var(--light-gray);
+            font-size: 0.8rem;
+            line-height: 1.4;
+        }
+
+        .profile-actions {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .profile-btn {
+            flex: 1;
+            padding: 0.5rem;
+            border: none;
+            border-radius: 8px;
+            font-size: 0.8rem;
+            cursor: pointer;
+            transition: var(--transition);
+            text-align: center;
+            text-decoration: none;
+        }
+
+        .profile-btn.primary {
+            background: linear-gradient(135deg, var(--gold), #e6c158);
+            color: var(--dark);
+            font-weight: 600;
+        }
+
+        .profile-btn.secondary {
+            background: rgba(255, 255, 255, 0.1);
+            color: var(--white);
+            border: 1px solid rgba(212, 175, 55, 0.3);
+        }
+
+        .profile-btn:hover {
+            transform: translateY(-2px);
+        }
+
+        /* Hero Section */
+        .hero {
+            min-height: 100vh;
+            background: linear-gradient(135deg, var(--dark) 0%, var(--light-dark) 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+            padding: 80px 1rem 1rem;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle at 30% 50%, rgba(212, 175, 55, 0.1) 0%, transparent 50%);
+        }
+
+        .hero-content {
+            text-align: center;
+            z-index: 2;
+            max-width: 800px;
+            width: 100%;
+        }
+
+        .hero h1 {
+            font-size: clamp(2rem, 8vw, 4rem);
+            margin-bottom: 1rem;
+            background: linear-gradient(135deg, var(--white), var(--gold));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: float 3s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+        }
+
+        .slogan-container {
+            font-size: clamp(1rem, 4vw, 1.8rem);
+            margin-bottom: 2rem;
+            color: var(--gold);
+            height: 60px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .slogan {
+            position: absolute;
+            width: 100%;
+            opacity: 0;
+            animation: sloganRotate 16s linear infinite;
+        }
+
+        .slogan:nth-child(1) { animation-delay: 0s; }
+        .slogan:nth-child(2) { animation-delay: 4s; }
+        .slogan:nth-child(3) { animation-delay: 8s; }
+        .slogan:nth-child(4) { animation-delay: 12s; }
+
+        @keyframes sloganRotate {
+            0% { opacity: 0; transform: translateY(30px); }
+            5% { opacity: 1; transform: translateY(0px); }
+            20% { opacity: 1; transform: translateY(0px); }
+            25% { opacity: 0; transform: translateY(-30px); }
+            100% { opacity: 0; }
+        }
+
+        /* Section Styles */
+        .section {
+            padding: 4rem 1rem;
+        }
+
+        .section-title {
+            text-align: center;
+            font-size: clamp(1.8rem, 5vw, 2.5rem);
+            margin-bottom: 2rem;
+            color: var(--white);
+        }
+
+        .section-title::after {
+            content: '';
+            display: block;
+            width: 60px;
+            height: 3px;
+            background: var(--gold);
+            margin: 1rem auto;
+        }
+
+        .section-dark {
+            background: var(--dark);
+        }
+
+        .section-light {
+            background: var(--light-dark);
+        }
+
+        /* Equipment Slider */
+        .slider-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            position: relative;
+        }
+
+        .slider {
+            display: flex;
+            overflow-x: auto;
+            scroll-behavior: smooth;
+            gap: 1rem;
+            padding: 2rem 0;
+            scrollbar-width: none;
+            -ms-overflow-style: none;
+        }
+
+        .slider::-webkit-scrollbar {
+            display: none;
+        }
+
+        .slider-item {
+            min-width: 280px;
+            background: linear-gradient(135deg, var(--dark) 0%, var(--light-dark) 100%);
+            border-radius: 20px;
+            padding: 1.5rem;
+            text-align: center;
+            border: 1px solid rgba(212, 175, 55, 0.1);
+            transition: var(--transition);
+            flex-shrink: 0;
+        }
+
+        .slider-item:hover {
+            transform: translateY(-10px);
+            border-color: var(--gold);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+        }
+
+        .equipment-icon {
+            width: 70px;
+            height: 70px;
+            background: linear-gradient(135deg, var(--gold), #e6c158);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1rem;
+            font-size: 1.5rem;
+        }
+
+        .slider-controls {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            margin-top: 2rem;
+        }
+
+        .slider-btn {
+            width: 45px;
+            height: 45px;
+            background: var(--gold);
+            border: none;
+            border-radius: 50%;
+            color: var(--dark);
+            font-size: 1.1rem;
+            cursor: pointer;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .slider-btn:hover {
+            transform: scale(1.1);
+            box-shadow: 0 5px 15px rgba(212, 175, 55, 0.3);
+        }
+
+        /* Services Grid */
+        .services-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.5rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .service-card {
+            background: linear-gradient(135deg, var(--dark) 0%, var(--light-dark) 100%);
+            padding: 2rem;
+            border-radius: 20px;
+            text-align: center;
+            transition: var(--transition);
+            border: 1px solid rgba(212, 175, 55, 0.1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .service-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, rgba(212, 175, 55, 0.05) 0%, transparent 100%);
+            opacity: 0;
+            transition: var(--transition);
+        }
+
+        .service-card:hover::before {
+            opacity: 1;
+        }
+
+        .service-card:hover {
+            transform: translateY(-10px);
+            border-color: rgba(212, 175, 55, 0.3);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+        }
+
+        .service-icon {
+            width: 70px;
+            height: 70px;
+            background: linear-gradient(135deg, var(--gold), #e6c158);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1rem;
+            font-size: 1.5rem;
+        }
+
+        /* Doctors Grid */
+        .doctors-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.5rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .doctor-card {
+            background: linear-gradient(135deg, var(--dark) 0%, var(--light-dark) 100%);
+            border-radius: 20px;
+            padding: 1.5rem;
+            text-align: center;
+            border: 1px solid rgba(212, 175, 55, 0.1);
+            transition: var(--transition);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .doctor-card:hover {
+            transform: translateY(-10px);
+            border-color: var(--gold);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+        }
+
+        .doctor-avatar {
+            width: 100px;
+            height: 100px;
+            background: linear-gradient(135deg, var(--gold), #e6c158);
+            border-radius: 50%;
+            margin: 0 auto 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            color: var(--dark);
+        }
+
+        .doctor-specialty {
+            color: var(--gold);
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
+        .doctor-experience {
+            background: rgba(212, 175, 55, 0.1);
+            padding: 0.4rem 0.8rem;
+            border-radius: 20px;
+            display: inline-block;
+            margin-bottom: 1rem;
+            font-size: 0.8rem;
+        }
+
+        /* Blog Grid */
+        .blog-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .blog-card {
+            background: linear-gradient(135deg, var(--dark) 0%, var(--light-dark) 100%);
+            border-radius: 20px;
+            overflow: hidden;
+            transition: var(--transition);
+            border: 1px solid rgba(212, 175, 55, 0.1);
+        }
+
+        .blog-card:hover {
+            transform: translateY(-10px);
+            border-color: var(--gold);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+        }
+
+        .blog-image {
+            width: 100%;
+            height: 180px;
+            background: linear-gradient(135deg, var(--gold), #e6c158);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2.5rem;
+            color: var(--dark);
+        }
+
+        .blog-content {
+            padding: 1.5rem;
+        }
+
+        .blog-content h3 {
+            font-size: 1.1rem;
+            margin-bottom: 0.8rem;
+            color: var(--white);
+        }
+
+        .blog-content p {
+            color: var(--light-gray);
+            line-height: 1.6;
+            margin-bottom: 1rem;
+            font-size: 0.9rem;
+        }
+
+        .read-more {
+            color: var(--gold);
+            text-decoration: none;
+            font-weight: 600;
+            transition: var(--transition);
+            font-size: 0.9rem;
+        }
+
+        .read-more:hover {
+            color: var(--white);
+        }
+
+        /* Reviews Grid */
+        .review-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.5rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .review-card {
+            background: linear-gradient(135deg, var(--dark) 0%, var(--light-dark) 100%);
+            padding: 1.5rem;
+            border-radius: 20px;
+            border: 1px solid rgba(212, 175, 55, 0.1);
+            transition: var(--transition);
+        }
+
+        .review-card:hover {
+            transform: translateY(-5px);
+            border-color: var(--gold);
+        }
+
+        .review-header {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .review-avatar {
+            width: 45px;
+            height: 45px;
+            background: linear-gradient(135deg, var(--gold), #e6c158);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            color: var(--dark);
+            font-size: 0.9rem;
+        }
+
+        .review-stars {
+            color: var(--gold);
+            margin-bottom: 1rem;
+            font-size: 0.9rem;
+        }
+
+        .review-text {
+            color: var(--light-gray);
+            line-height: 1.6;
+            font-style: italic;
+            font-size: 0.9rem;
+        }
+
+        /* Footer Styles */
+        .footer {
+            background: linear-gradient(135deg, var(--dark) 0%, #2a2a2a 100%);
+            padding: 3rem 1rem 1rem;
+            border-top: 1px solid rgba(212, 175, 55, 0.2);
+        }
+
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+        }
+
+        .footer-section h4 {
+            color: var(--gold);
+            margin-bottom: 1rem;
+            font-size: 1.1rem;
+        }
+
+        .footer-section p, .footer-section a {
+            color: var(--light-gray);
+            line-height: 1.6;
+            text-decoration: none;
+            transition: var(--transition);
+            font-size: 0.9rem;
+        }
+
+        .footer-section a:hover {
+            color: var(--gold);
+        }
+
+        .social-links {
+            display: flex;
+            gap: 0.8rem;
+            margin-top: 1rem;
+        }
+
+        .social-link {
+            width: 35px;
+            height: 35px;
+            background: var(--light-dark);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: var(--transition);
+            font-size: 0.9rem;
+        }
+
+        .social-link:hover {
+            background: var(--gold);
+            transform: translateY(-3px);
+        }
+
+        .footer-bottom {
+            max-width: 1200px;
+            margin: 2rem auto 0;
+            padding-top: 1.5rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            text-align: center;
+            color: var(--light-gray);
+            font-size: 0.8rem;
+        }
+
+        /* Animations */
+        .fade-in {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.6s ease-out;
+        }
+
+        .fade-in.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            header {
+                padding: 1rem;
+            }
+
+            .mobile-menu-btn {
+                display: block;
+            }
+
+            .nav-links {
+                display: none;
+                position: absolute;
+                top: 100%;
+                right: 0;
+                width: 100%;
+                background: var(--light-dark);
+                flex-direction: column;
+                padding: 1rem;
+                border-top: 1px solid rgba(212, 175, 55, 0.1);
+            }
+
+            .nav-links.active {
+                display: flex;
+            }
+
+            .auth-buttons {
+                gap: 0.5rem;
+            }
+
+            .user-name {
+                display: none;
+            }
+
+            .consultation-btn {
+                padding: 0.4rem 0.8rem;
+                font-size: 0.8rem;
+            }
+
+            .cta-button {
+                padding: 0.6rem 1rem;
+                font-size: 0.8rem;
+            }
+
+            .profile-dropdown {
+                width: 250px;
+                left: -100px;
+            }
+
+            .section {
+                padding: 3rem 1rem;
+            }
+
+            .slider-item {
+                min-width: 260px;
+            }
+
+            .services-grid,
+            .doctors-grid,
+            .blog-grid,
+            .review-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .hero {
+                padding: 70px 1rem 1rem;
+            }
+
+            .auth-buttons {
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+
+            .profile-dropdown {
+                width: 220px;
+                left: -80px;
+                padding: 0.8rem;
+            }
+
+            .slider-item {
+                min-width: 240px;
+                padding: 1rem;
+            }
+
+            .service-card {
+                padding: 1.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Loading Screen -->
+    <div class="loading-screen" id="loadingScreen">
+        <div class="loading-logo">نوتن</div>
+        <div class="loading-text">تنی نو، زندگی نو</div>
+        <div class="loading-subtext">کلینیک تخصصی زیبایی</div>
+        <div class="spinner"></div>
+    </div>
+
+    <!-- Header -->
+    <header>
+        <nav class="nav-container">
+            <a href="#" class="logo">Nootan</a>
+            
+            <button class="mobile-menu-btn" id="mobileMenuBtn">
+                <i class="fas fa-bars"></i>
+            </button>
+
+            <ul class="nav-links" id="navLinks">
+                <li><a href="#home">خانه</a></li>
+                <li><a href="#equipment">دستگاه‌ها</a></li>
+                <li><a href="#services">خدمات</a></li>
+                <li><a href="#doctors">پزشکان</a></li>
+                <li><a href="#blog">وبلاگ</a></li>
+                <li><a href="#reviews">نظرات</a></li>
+                <li><a href="#contact">تماس</a></li>
+            </ul>
+            <div class="auth-buttons">
+                <a href="#" class="consultation-btn">مشاوره رایگان</a>
+                
+                <!-- User Profile -->
+                <div class="user-profile" id="userProfile">
+                    <div class="notification-badge">۳</div>
+                    <div class="user-avatar">س</div>
+                    <div class="user-name">سارا</div>
+                    
+                    <div class="profile-dropdown" id="profileDropdown">
+                        <div class="profile-header">
+                            <div class="profile-avatar">س</div>
+                            <div class="profile-info">
+                                <h4>سارا محمدی</h4>
+                                <p>عضویت: ۶ ماه</p>
+                            </div>
+                        </div>
+                        
+                        <div class="profile-stats">
+                            <div class="stat-item">
+                                <span class="stat-number">۱۲</span>
+                                <span class="stat-label">جلسات</span>
+                            </div>
+                            <div class="stat-item">
+                                <span class="stat-number">۸۵%</span>
+                                <span class="stat-label">پیشرفت</span>
+                            </div>
+                            <div class="stat-item">
+                                <span class="stat-number">۳</span>
+                                <span class="stat-label">فعال</span>
+                            </div>
+                        </div>
+                        
+                        <div class="progress-section">
+                            <div class="progress-header">
+                                <span class="progress-title">درمان لاغری موضعی</span>
+                                <span class="progress-percent">۶۵%</span>
+                            </div>
+                            <div class="progress-bar">
+                                <div class="progress-fill"></div>
+                            </div>
+                        </div>
+                        
+                        <div class="current-treatment">
+                            <div class="treatment-title">💫 جلسه بعدی</div>
+                            <div class="treatment-details">
+                                <strong>لیزر موهای زائد</strong><br>
+                                📅 فردا - ۱۰:۳۰ صبح<br>
+                                👩‍⚕️ دکتر سارا محمدی
+                            </div>
+                        </div>
+                        
+                        <div class="profile-actions">
+                            <a href="#" class="profile-btn primary">
+                                <i class="fas fa-calendar-alt"></i>
+                                نوبت‌ها
+                            </a>
+                            <a href="#" class="profile-btn secondary">
+                                <i class="fas fa-cog"></i>
+                                تنظیمات
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                
+                <a href="#booking" class="cta-button">رزرو نوبت</a>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero" id="home">
+        <div class="hero-content">
+            <h1>کلینیک تخصصی نوتن</h1>
+            <div class="slogan-container">
+                <div class="slogan">💫 تنی نو، زندگی نو</div>
+                <div class="slogan">👑 زیبایی را با نوتن تجربه کنید</div>
+                <div class="slogan">⭐ متخصصین مجرب، نتایج ماندگار</div>
+                <div class="slogan">🎯 مدرن‌ترین خدمات زیبایی</div>
+            </div>
+            <a href="#services" class="cta-button">مشاهده خدمات</a>
+        </div>
+    </section>
+
+    <!-- Equipment Section -->
+    <section class="section section-light" id="equipment">
+        <h2 class="section-title">دستگاه‌های پیشرفته ما</h2>
+        <div class="slider-container">
+            <div class="slider" id="equipmentSlider">
+                <div class="slider-item fade-in">
+                    <div class="equipment-icon">❄️</div>
+                    <h3>دستگاه کرایو</h3>
+                    <p>جدیدترین تکنولوژی لاغری موضعی با سرمادرمانی</p>
+                </div>
+                <div class="slider-item fade-in">
+                    <div class="equipment-icon">⚡</div>
+                    <h3>دستگاه RF</h3>
+                    <p>لیفتینگ و جوانسازی پوست با امواج رادیوفرکانسی</p>
+                </div>
+                <div class="slider-item fade-in">
+                    <div class="equipment-icon">💎</div>
+                    <h3>دستگاه کربوکسی</h3>
+                    <p>درمان کربوکسی تراپی برای لاغری و جوانسازی</p>
+                </div>
+                <div class="slider-item fade-in">
+                    <div class="equipment-icon">🔦</div>
+                    <h3>لیزر کوترا</h3>
+                    <p>پیشرفته‌ترین دستگاه لیزر موهای زائد</p>
+                </div>
+            </div>
+            <div class="slider-controls">
+                <button class="slider-btn prev-btn" onclick="scrollSlider('equipmentSlider', -300)">
+                    <i class="fas fa-chevron-right"></i>
+                </button>
+                <button class="slider-btn next-btn" onclick="scrollSlider('equipmentSlider', 300)">
+                    <i class="fas fa-chevron-left"></i>
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Services Section -->
+    <section class="section section-dark" id="services">
+        <h2 class="section-title">خدمات تخصصی ما</h2>
+        <div class="services-grid">
+            <div class="service-card fade-in">
+                <div class="service-icon">⚖️</div>
+                <h3>لاغری موضعی</h3>
+                <p>کرایو، RF، کربوکسی - کاهش سایز موضعی با آخرین تکنولوژی‌ها</p>
+            </div>
+            <div class="service-card fade-in">
+                <div class="service-icon">💫</div>
+                <h3>لیزر موهای زائد</h3>
+                <p>با دستگاه پیشرفته کوترا - سریع، مطمئن و بدون درد</p>
+            </div>
+            <div class="service-card fade-in">
+                <div class="service-icon">❤️</div>
+                <h3>درمان واریس</h3>
+                <p>لیزر واریس با دستگاه کوترا - درمان قطعی رگ‌های واریسی</p>
+            </div>
+            <div class="service-card fade-in">
+                <div class="service-icon">💉</div>
+                <h3>ژل و بوتاکس</h3>
+                <p>تزریق تخصصی توسط متخصصین مجرب با طبیعی‌ترین نتایج</p>
+            </div>
+            <div class="service-card fade-in">
+                <div class="service-icon">✨</div>
+                <h3>فیشیال پوست</h3>
+                <p>انواع فیشیال تخصصی برای جوانسازی و درمان مشکلات پوستی</p>
+            </div>
+            <div class="service-card fade-in">
+                <div class="service-icon">🌿</div>
+                <h3>کاشت مو و ابرو</h3>
+                <p>کاشت طبیعی مو و ابرو با کیفیت عالی و ماندگاری بالا</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Doctors Section -->
+    <section class="section section-light" id="doctors">
+        <h2 class="section-title">تیم پزشکی ما</h2>
+        <div class="doctors-grid">
+            <div class="doctor-card fade-in">
+                <div class="doctor-avatar">👩‍⚕️</div>
+                <h3>دکتر سارا محمدی</h3>
+                <div class="doctor-specialty">متخصص پوست و مو</div>
+                <div class="doctor-experience">۱۵ سال تجربه</div>
+                <p>تخصص در زمینه لیزرتراپی و جوانسازی پوست با استفاده از پیشرفته‌ترین دستگاه‌ها</p>
+            </div>
+            <div class="doctor-card fade-in">
+                <div class="doctor-avatar">👨‍⚕️</div>
+                <h3>دکتر امیر رضایی</h3>
+                <div class="doctor-specialty">جراح زیبایی</div>
+                <div class="doctor-experience">۱۲ سال تجربه</div>
+                <p>متخصص در زمینه تزریق ژل و بوتاکس با نتایج کاملاً طبیعی و هنرمندانه</p>
+            </div>
+            <div class="doctor-card fade-in">
+                <div class="doctor-avatar">👩‍⚕️</div>
+                <h3>دکتر نازنین کریمی</h3>
+                <div class="doctor-specialty">متخصص لاغری</div>
+                <div class="doctor-experience">۱۰ سال تجربه</div>
+                <p>تخصص در زمینه لاغری موضعی با دستگاه‌های کرایو، RF و کربوکسی</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Blog Section -->
+    <section class="section section-dark" id="blog">
+        <h2 class="section-title">مقالات تخصصی</h2>
+        <div class="blog-grid">
+            <div class="blog-card fade-in">
+                <div class="blog-image">📸</div>
+                <div class="blog-content">
+                    <h3>جدیدترین متدهای لاغری موضعی در سال 2024</h3>
+                    <p>آشنایی با تکنولوژی‌های کرایو، RF و کربوکسی برای لاغری سریع و مطمئن</p>
+                    <a href="#" class="read-more">ادامه مطلب →</a>
+                </div>
+            </div>
+            <div class="blog-card fade-in">
+                <div class="blog-image">💡</div>
+                <div class="blog-content">
+                    <h3>مقایسه دستگاه‌های لیزر موهای زائد</h3>
+                    <p>بررسی تخصصی دستگاه کوترا و مزایای آن نسبت به سایر دستگاه‌ها</p>
+                    <a href="#" class="read-more">ادامه مطلب →</a>
+                </div>
+            </div>
+            <div class="blog-card fade-in">
+                <div class="blog-image">🎯</div>
+                <div class="blog-content">
+                    <h3>مراقبت‌های بعد از تزریق ژل و بوتاکس</h3>
+                    <p>راهنمای کامل مراقبت‌های پس از تزریق برای ماندگاری بیشتر</p>
+                    <a href="#" class="read-more">ادامه مطلب →</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Reviews Section -->
+    <section class="section section-light" id="reviews">
+        <h2 class="section-title">نظرات مراجعین</h2>
+        <div class="review-grid">
+            <div class="review-card fade-in">
+                <div class="review-header">
+                    <div class="review-avatar">س</div>
+                    <div>
+                        <h4>سارا محمدی</h4>
+                        <small>خدمت: لاغری با کرایو</small>
+                    </div>
+                </div>
+                <div class="review-stars">★★★★★</div>
+                <p class="review-text">با 6 جلسه کرایو 12 سانت از دور کمرم کم شد. واقعا حرفه‌ای و بی‌دردسر بود. متشکرم نوتن</p>
+            </div>
+            <div class="review-card fade-in">
+                <div class="review-header">
+                    <div class="review-avatar">م</div>
+                    <div>
+                        <h4>مریم رضایی</h4>
+                        <small>خدمت: لیزر موهای زائد</small>
+                    </div>
+                </div>
+                <div class="review-stars">★★★★★</div>
+                <p class="review-text">دستگاه کوترا معرکست! بعد از سال‌ها درگیر موهای زائد بودم، حالا پوستی صاف دارم</p>
+            </div>
+            <div class="review-card fade-in">
+                <div class="review-header">
+                    <div class="review-avatar">ن</div>
+                    <div>
+                        <h4>نازنین کریمی</h4>
+                        <small>خدمت: تزریق ژل</small>
+                    </div>
+                </div>
+                <div class="review-stars">★★★★★</div>
+                <p class="review-text">تزریق ژل فوق‌العاده طبیعی انجام شد. کسی متوجه نمی‌شه ولی تاثیرش رو خودم می‌بینم</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer" id="contact">
+        <div class="footer-content">
+            <div class="footer-section">
+                <h4>درباره نوتن</h4>
+                <p>کلینیک تخصصی نوتن با سال‌ها تجربه در زمینه خدمات زیبایی و مراقبت‌های پوستی، آماده ارائه بهترین خدمات به شما عزیزان می‌باشد.</p>
+            </div>
+            <div class="footer-section">
+                <h4>تماس با ما</h4>
+                <p>📍 آدرس: اهواز، خیابان اصلی</p>
+                <p>📞 تلفن: در حال راه‌اندازی</p>
+                <p>✉️ ایمیل: info@nootan.com</p>
+            </div>
+            <div class="footer-section">
+                <h4>ساعات کاری</h4>
+                <p>شنبه تا چهارشنبه: ۹ صبح تا ۹ شب</p>
+                <p>پنجشنبه: ۹ صبح تا ۶ عصر</p>
+                <p>جمعه: تعطیل</p>
+            </div>
+            <div class="footer-section">
+                <h4>شبکه‌های اجتماعی</h4>
+                <div class="social-links">
+                    <a href="#" class="social-link"><i class="fab fa-instagram"></i></a>
+                    <a href="#" class="social-link"><i class="fab fa-telegram"></i></a>
+                    <a href="#" class="social-link"><i class="fab fa-whatsapp"></i></a>
+                </div>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>© ۲۰۲۴ کلیه حقوق برای کلینیک تخصصی نوتن محفوظ می‌باشد.</p>
+        </div>
+    </footer>
+
+    <script>
+        // Improved Loading Screen with better mobile support
+        window.addEventListener('load', function() {
+            // Minimum display time for loading screen
+            setTimeout(() => {
+                const loadingScreen = document.getElementById('loadingScreen');
+                loadingScreen.classList.add('hidden');
+                
+                // Remove from DOM after animation
+                setTimeout(() => {
+                    loadingScreen.style.display = 'none';
+                }, 500);
+            }, 1500); // Reduced to 1.5 seconds for mobile
+        });
+
+        // Fallback in case load event doesn't fire
+        setTimeout(() => {
+            const loadingScreen = document.getElementById('loadingScreen');
+            if (loadingScreen && !loadingScreen.classList.contains('hidden')) {
+                loadingScreen.classList.add('hidden');
+                setTimeout(() => {
+                    loadingScreen.style.display = 'none';
+                }, 500);
+            }
+        }, 5000); // Maximum 5 seconds wait
+
+        // Mobile Menu Toggle
+        const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+        const navLinks = document.getElementById('navLinks');
+
+        if (mobileMenuBtn && navLinks) {
+            mobileMenuBtn.addEventListener('click', function() {
+                navLinks.classList.toggle('active');
+            });
+
+            // Close menu when clicking on links
+            document.querySelectorAll('.nav-links a').forEach(link => {
+                link.addEventListener('click', function() {
+                    navLinks.classList.remove('active');
+                });
+            });
+
+            // Close menu when clicking outside
+            document.addEventListener('click', function(e) {
+                if (!mobileMenuBtn.contains(e.target) && !navLinks.contains(e.target)) {
+                    navLinks.classList.remove('active');
+                }
+            });
+        }
+
+        // User Profile Dropdown
+        const userProfile = document.getElementById('userProfile');
+        const profileDropdown = document.getElementById('profileDropdown');
+
+        if (userProfile && profileDropdown) {
+            userProfile.addEventListener('click', function(e) {
+                e.stopPropagation();
+                profileDropdown.classList.toggle('active');
+            });
+
+            document.addEventListener('click', function(e) {
+                if (!userProfile.contains(e.target)) {
+                    profileDropdown.classList.remove('active');
+                }
+            });
+
+            profileDropdown.addEventListener('click', function(e) {
+                e.stopPropagation();
+            });
+        }
+
+        // Slider Controls
+        function scrollSlider(sliderId, amount) {
+            const slider = document.getElementById(sliderId);
+            slider.scrollBy({
+                left: amount,
+                behavior: 'smooth'
+            });
+        }
+
+        // Auto-scroll for sliders
+        function autoScroll(sliderId, speed = 4000) {
+            const slider = document.getElementById(sliderId);
+            if (!slider) return;
+
+            let scrollAmount = 0;
+            const scrollStep = 300;
+            const maxScroll = slider.scrollWidth - slider.clientWidth;
+
+            setInterval(() => {
+                if (scrollAmount >= maxScroll) {
+                    scrollAmount = 0;
+                    slider.scrollTo({ left: 0, behavior: 'smooth' });
+                } else {
+                    scrollAmount += scrollStep;
+                    slider.scrollBy({ 
+                        left: scrollStep, 
+                        behavior: 'smooth' 
+                    });
+                }
+            }, speed);
+        }
+
+        // Initialize auto-scroll
+        autoScroll('equipmentSlider', 4000);
+
+        // Scroll Animations
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('.fade-in').forEach(el => {
+            observer.observe(el);
+        });
+
+        // Smooth scrolling
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+
+        // User data and real-time updates
+        const userData = {
+            name: "سارا محمدی",
+            avatar: "س",
+            membership: "۶ ماه",
+            stats: {
+                sessions: 12,
+                progress: 85,
+                active: 3
+            },
+            currentTreatment: {
+                title: "درمان لاغری موضعی",
+                progress: 65,
+                nextAppointment: {
+                    service: "لیزر موهای زائد",
+                    date: "فردا - ۱۰:۳۰ صبح",
+                    doctor: "دکتر سارا محمدی"
+                }
+            }
+        };
+
+        function updateProfileData() {
+            document.querySelector('.user-name').textContent = userData.name.split(' ')[0];
+            document.querySelector('.user-avatar').textContent = userData.avatar;
+            document.querySelector('.profile-avatar').textContent = userData.avatar;
+            document.querySelector('.profile-info h4').textContent = userData.name;
+            document.querySelector('.profile-info p').textContent = `عضویت: ${userData.membership}`;
+            
+            const statNumbers = document.querySelectorAll('.stat-number');
+            statNumbers[0].textContent = userData.stats.sessions;
+            statNumbers[1].textContent = userData.stats.progress + '%';
+            statNumbers[2].textContent = userData.stats.active;
+            
+            document.querySelector('.progress-title').textContent = userData.currentTreatment.title;
+            document.querySelector('.progress-percent').textContent = userData.currentTreatment.progress + '%';
+            document.querySelector('.progress-fill').style.width = userData.currentTreatment.progress + '%';
+        }
+
+        updateProfileData();
+
+        setInterval(() => {
+            if (userData.currentTreatment.progress < 100) {
+                userData.currentTreatment.progress += 1;
+                if (userData.currentTreatment.progress > 100) {
+                    userData.currentTreatment.progress = 100;
+                }
+                updateProfileData();
+            }
+        }, 5000);
+
+        // Prevent horizontal scroll on mobile
+        document.addEventListener('touchmove', function(e) {
+            if (e.touches.length > 1) {
+                e.preventDefault();
+            }
+        }, { passive: false });
+
+        // Improve performance on mobile
+        document.addEventListener('DOMContentLoaded', function() {
+            // Force hardware acceleration for animations
+            const elements = document.querySelectorAll('.hero, .slider-item, .service-card');
+            elements.forEach(el => {
+                el.style.transform = 'translateZ(0)';
+            });
+        });
+    </script>
+</body>
+</html>
